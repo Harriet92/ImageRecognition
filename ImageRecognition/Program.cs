@@ -97,7 +97,7 @@ namespace ImageRecognition
 
         static void Main()
         {
-            Mat src = new Mat("images/easy.jpg");
+            Mat src = new Mat("images/trzy.jpg");
             MedianFilter fltr = new MedianFilter { Size = ProcessingParams.MedianFilterSize };
             ContrastFilter contrast = new ContrastFilter(ProcessingParams.ContrastFilter);
             DilationFilter dilate = new DilationFilter(3);
@@ -109,7 +109,7 @@ namespace ImageRecognition
             Analyzer analyzer = new Analyzer(seg.segments);
             analyzer.AnalyzeSegments();
             using (new Window("source", seg.PrintBWMap()))
-            using (new Window("processed", seg.PrintSegments()))
+            using (new Window("processed", analyzer.PrintMatchedSegments(seg.segMap)))
             {
                 Cv2.WaitKey();
             }
