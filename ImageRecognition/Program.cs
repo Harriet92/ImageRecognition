@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Drawing.Printing;
-using OpenCvSharp;
+using ImageRecognition.Processing;
+using ImageRecognition.Processing.Filters;
 using OpenCvSharp.CPlusPlus;
 
 namespace ImageRecognition
@@ -96,14 +96,17 @@ namespace ImageRecognition
 
         static void Main()
         {
-            Mat src = new Mat("elipsa.dib", LoadMode.GrayScale);
-            Print(src, "Ellipse");
-            int field, circuit;
-            field = circuit = 0;
-            Mat res = ComputeField(src, ref field);
-            Mat res2 = ComputeCircuit(src, ref circuit);
-            using (new Window("src image", res))
-            using (new Window("dst image", res2))
+            Mat src = new Mat("images/easy.jpg");
+            MedianFilter fltr = new MedianFilter { Size = ProcessingParams.MedianFilterSize };
+            ContrastFilter contrast = new ContrastFilter(ProcessingParams.ContrastFilter);
+            DilationFilter dilate = new DilationFilter(3);
+            Segmentation seg = new Segmentation();
+            //Mat res1 = sharp.ApplyFilter(contrast.ApplyFilter(fltr.ApplyFilter(src)));
+            Mat res2 = contrast.ApplyFilter(fltr.ApplyFilter(src));
+            seg.ConvertToBW(res2);
+            seg.GetSegments();
+            using (new Window("source", seg.PrintBWMap()))
+            using (new Window("processed", seg.PrintSegments()))
             {
                 Cv2.WaitKey();
             }
