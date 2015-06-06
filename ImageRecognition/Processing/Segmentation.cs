@@ -19,8 +19,8 @@ namespace ImageRecognition.Processing
             for (var i = 0; i < I.Rows; i++)
                 for (var j = 0; j < I.Cols; j++)
                     map[i, j] = indexer[i, j].IsInRange(ProcessingParams.MinRed, ProcessingParams.MaxRed) ||
-                                indexer[i, j].IsInRange(ProcessingParams.MinText, ProcessingParams.MaxText)||
-                                indexer[i,j].IsInRange(ProcessingParams.MinGray, ProcessingParams.MaxGray)
+                                indexer[i, j].IsInRange(ProcessingParams.MinText, ProcessingParams.MaxText) ||
+                                indexer[i, j].IsInRange(ProcessingParams.MinGray, ProcessingParams.MaxGray)
                         ? 1 : 0;
             segMap = map;
             DilateSegMap();
@@ -54,18 +54,18 @@ namespace ImageRecognition.Processing
                         while (pending.Count != 0)
                         {
                             count++;
-                            Point p = (Point)pending.Pop();
+                            Point p = pending.Pop();
                             if (tempSegMap[p.X, p.Y] == 1)
                             {
                                 tempSegMap[p.X, p.Y] = 0;
                                 seg.AddPoint(p.X, p.Y);
-                                if (p.X > 0 && tempSegMap[p.X - 1, p.Y] == 1)
+                                if (tempSegMap[p.X - 1, p.Y] == 1)
                                     pending.Push(new Point(p.X - 1, p.Y));
-                                if (p.X + 1 < tempSegMap.GetLength(0) && tempSegMap[p.X + 1, p.Y] == 1)
+                                if (tempSegMap[p.X + 1, p.Y] == 1)
                                     pending.Push(new Point(p.X + 1, p.Y));
-                                if (p.Y > 0 && tempSegMap[p.X, p.Y - 1] == 1)
+                                if (tempSegMap[p.X, p.Y - 1] == 1)
                                     pending.Push(new Point(p.X, p.Y - 1));
-                                if (p.Y + 1 < tempSegMap.GetLength(1) && tempSegMap[p.X, p.Y + 1] == 1)
+                                if (tempSegMap[p.X, p.Y + 1] == 1)
                                     pending.Push(new Point(p.X, p.Y + 1));
                             }
                         }
@@ -77,7 +77,7 @@ namespace ImageRecognition.Processing
                     }
                 }
             }
-            segs.ForEach(x => x.SaveMapSlice(segMap));
+            //segs.ForEach(x => x.SaveMapSlice(segMap));
             segments = segs;
         }
 
@@ -90,7 +90,8 @@ namespace ImageRecognition.Processing
                 Vec3b color = new Vec3b((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
                 for (var i = segment.LeftUpperX; i < segment.RightBottomX; i++)
                     for (var j = segment.LeftUpperY; j < segment.RightBottomY; j++)
-                        rindexer[i, j] = color;
+                        if (segment.Slice[i - segment.LeftUpperX, j - segment.LeftUpperY] == 1)
+                            rindexer[i, j] = color;
             }
             return result;
         }
