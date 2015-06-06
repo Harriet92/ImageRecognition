@@ -8,8 +8,8 @@ namespace ImageRecognition.Processing
 {
     public class Segmentation
     {
-        private int[,] segMap;
-        private List<Segment> segments;
+        public int[,] segMap;
+        public List<Segment> segments;
         private Random random = new Random();
         private const int dilationSize = 3;
         public void ConvertToBW(Mat I)
@@ -19,7 +19,8 @@ namespace ImageRecognition.Processing
             for (var i = 0; i < I.Rows; i++)
                 for (var j = 0; j < I.Cols; j++)
                     map[i, j] = indexer[i, j].IsInRange(ProcessingParams.MinRed, ProcessingParams.MaxRed) ||
-                                indexer[i, j].IsInRange(ProcessingParams.MinText, ProcessingParams.MaxText)
+                                indexer[i, j].IsInRange(ProcessingParams.MinText, ProcessingParams.MaxText)||
+                                indexer[i,j].IsInRange(ProcessingParams.MinGray, ProcessingParams.MaxGray)
                         ? 1 : 0;
             segMap = map;
             DilateSegMap();
@@ -76,6 +77,7 @@ namespace ImageRecognition.Processing
                     }
                 }
             }
+            segs.ForEach(x => x.SaveMapSlice(segMap));
             segments = segs;
         }
 

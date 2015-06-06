@@ -232,6 +232,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analysis\Analyzer.cs" />
+    <Compile Include="Analysis\ImageType.cs" />
     <Compile Include="Analysis\Momentums.cs" />
     <Compile Include="Helpers\ColorVectors.cs" />
     <Compile Include="Helpers\MatHelpers.cs" />

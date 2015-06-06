@@ -1,4 +1,5 @@
 ﻿using System;
+using ImageRecognition.Analysis;
 using ImageRecognition.Processing;
 using ImageRecognition.Processing.Filters;
 using OpenCvSharp.CPlusPlus;
@@ -105,6 +106,8 @@ namespace ImageRecognition
             Mat res2 = contrast.ApplyFilter(fltr.ApplyFilter(src));
             seg.ConvertToBW(res2);
             seg.GetSegments();
+            Analyzer analyzer = new Analyzer(seg.segments);
+            analyzer.AnalyzeSegments();
             using (new Window("source", seg.PrintBWMap()))
             using (new Window("processed", seg.PrintSegments()))
             {

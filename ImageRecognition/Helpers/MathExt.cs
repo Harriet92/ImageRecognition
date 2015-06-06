@@ -37,5 +37,9 @@ namespace ImageRecognition.Helpers
             return value.Item0 >= min.Item0 && value.Item1 >= min.Item1 && value.Item2 >= min.Item2 &&
                    value.Item0 <= max.Item0 && value.Item1 <= max.Item1 && value.Item2 <= max.Item2;
         }
+        public static bool IsInRange(this double value, double min, double max)
+        {
+            return value >= min && value <= max;
+        }
     }
 }
