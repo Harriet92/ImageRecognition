@@ -77,7 +77,6 @@ namespace ImageRecognition.Processing
                     }
                 }
             }
-            //segs.ForEach(x => x.SaveMapSlice(segMap));
             segments = segs;
         }
 

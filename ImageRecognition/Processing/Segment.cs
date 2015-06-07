@@ -11,7 +11,7 @@ namespace ImageRecognition.Processing
         public int LeftUpperY { get; set; }
         public int RightBottomX { get; set; }
         public int RightBottomY { get; set; }
-        public int Rows { get { return RightBottomY - LeftUpperY + 1;} }
+        public int Rows { get { return RightBottomY - LeftUpperY + 1; } }
         public int Cols { get { return RightBottomX - LeftUpperX + 1; } }
         public int[,] Slice { get; private set; }
 
@@ -22,30 +22,25 @@ namespace ImageRecognition.Processing
             RightBottomX = rightBottomX;
             RightBottomY = rightBottomY;
             RecognizedShape = Shapes.None;
-            Slice = new int[1,1];
+            Slice = new int[1, 1];
             Slice[0, 0] = 1;
         }
 
         public void AddPoint(int x, int y)
         {
-            int oldMinX = 0; int oldMinY = 0;
-            if (x < LeftUpperX)
-            {
-                oldMinX = LeftUpperX;
-                LeftUpperX = Math.Min(LeftUpperX, x);
-            }
-            if (y < LeftUpperY)
-            {
-                oldMinY = LeftUpperY;
-                LeftUpperY = Math.Min(LeftUpperY, y);
-            }
-            RightBottomX = Math.Max(RightBottomX, x);
-            RightBottomY = Math.Max(RightBottomY, y);
+            int oldMinX;
+            int oldMinY;
+            if (ChangeSliceSize(out oldMinX, x, y, out oldMinY))
+                ExpandSliceArea(oldMinX, oldMinY);
+            Slice[x - LeftUpperX, y - LeftUpperY] = 1;
+        }
+
+        private void ExpandSliceArea(int oldMinX, int oldMinY)
+        {
+            int si = (oldMinX - LeftUpperX).Trunc();
+            int sj = (oldMinY - LeftUpperY).Trunc();
             var temp = Slice;
             Slice = new int[Cols, Rows];
-            int si = (oldMinX - LeftUpperX).Trunc();
-            int sj = (oldMinY - LeftUpperY).Trunc(); ;
-            
             for (int i = 0; i < temp.GetLength(0); i++)
             {
                 for (int j = 0; j < temp.GetLength(1); j++)
@@ -53,21 +48,36 @@ namespace ImageRecognition.Processing
                     Slice[i + si, j + sj] = temp[i, j];
                 }
             }
-            //Buffer.BlockCopy(temp, 0, Slice, 0, temp.Length * sizeof(int));
-            Slice[x - LeftUpperX, y - LeftUpperY] = 1;
         }
 
-        public void SaveMapSlice(int[,] fullMap)
+        private bool ChangeSliceSize(out int oldMinX, int x, int y, out int oldMinY)
         {
-            Slice = new int[Rows,Cols];
-            for (int i = 0; i < Rows; i++)
+            oldMinX = 0;
+            oldMinY = 0;
+            bool sizeChanged = false;
+            if (x < LeftUpperX)
             {
-                for (int j = 0; j < Cols; j++)
-                {
-                    Slice[i, j] = fullMap[j + LeftUpperX, i + LeftUpperY ];
-                }
+                oldMinX = LeftUpperX;
+                LeftUpperX = Math.Min(LeftUpperX, x);
+                sizeChanged = true;
             }
+            else if (x > RightBottomX)
+            {
+                RightBottomX = Math.Max(RightBottomX, x);
+                sizeChanged = true;
+            }
+            if (y < LeftUpperY)
+            {
+                oldMinY = LeftUpperY;
+                LeftUpperY = Math.Min(LeftUpperY, y);
+                sizeChanged = true;
+            }
+            else if (y > RightBottomY)
+            {
+                RightBottomY = Math.Max(RightBottomY, y);
+                sizeChanged = true;
+            }
+            return sizeChanged;
         }
-
     }
 }

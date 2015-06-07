@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing.Printing;
+using System.Threading.Tasks;
 using ImageRecognition.Helpers;
 using ImageRecognition.Processing;
 using OpenCvSharp.CPlusPlus;
@@ -17,14 +18,16 @@ namespace ImageRecognition.Analysis
 
         public void AnalyzeSegments()
         {
-            foreach (var seg in Segments)
-            {
-                Momentums moms = new Momentums(seg.Slice);
-                //Console.WriteLine("Shape recognized! X: {0}, Y: {1}, M1: {2}, M7: {3}, M3: {4}", seg.LeftUpperX, seg.LeftUpperY, moms.M1(), moms.M7(), moms.M3());
-                seg.RecognizedShape = MatchShape(moms.M1(), moms.M7(), moms.M3());
-                if (seg.RecognizedShape != Shapes.None)
-                    Console.WriteLine("Shape recognized! X: {0}, Y: {1}, shape: {2}", seg.LeftUpperX, seg.LeftUpperY, seg.RecognizedShape);
-            }
+            Parallel.ForEach(Segments,
+                (seg) =>
+                {
+                    Momentums moms = new Momentums(seg.Slice);
+                    //Console.WriteLine("Shape recognized! X: {0}, Y: {1}, M1: {2}, M7: {3}, M3: {4}", seg.LeftUpperX, seg.LeftUpperY, moms.M1(), moms.M7(), moms.M3());
+                    seg.RecognizedShape = MatchShape(moms.M1(), moms.M7(), moms.M3());
+                    if (seg.RecognizedShape != Shapes.None)
+                        Console.WriteLine("Shape recognized! X: {0}, Y: {1}, shape: {2}", seg.LeftUpperX, seg.LeftUpperY,
+                            seg.RecognizedShape);
+                });
         }
 
         public Mat PrintMatchedSegments(int[,] map)
