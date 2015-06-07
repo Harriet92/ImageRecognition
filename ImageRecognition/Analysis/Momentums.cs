@@ -46,6 +46,15 @@ namespace ImageRecognition.Analysis
             return (Mpq(map, 2, 0) + Mpq(map, 0, 2)) / Math.Pow(mpq(map, 0, 0), 2);
         }
 
+        public static double M3(int[,] map)
+        {
+            double N30 = Npq(map, 3, 0);
+            double N12 = Npq(map, 1, 2);
+            double N21 = Npq(map, 2, 1);
+            double N03 = Npq(map, 0, 3);
+            return Math.Pow(N30 - 3f * N12, 2f) + Math.Pow(3f * N21 - N03, 2f);
+        }
+
         public static double M7(int[,] map)
         {
             double N20 = Npq(map, 2, 0);

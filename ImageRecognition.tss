@@ -2,40 +2,52 @@
 <ArrayOfArrayOfArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ArrayOfArrayOfString>
     <ArrayOfString>
-      <string>e:\projekty\studiamgr\pobr\imagerecognition\imagerecognition\program.cs</string>
+      <string>E:\Projekty\StudiaMGR\POBR\ImageRecognition\ImageRecognition\Processing\Filters\DilationFilter.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>e:\projekty\studiamgr\pobr\imagerecognition\imagerecognition\processing\filters\medianfilter.cs</string>
+      <string>e:\projekty\studiamgr\pobr\imagerecognition\imagerecognition\processing\segment.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>e:\projekty\studiamgr\pobr\imagerecognition\imagerecognition\processing\filters\matricefilter.cs</string>
+      <string>e:\projekty\studiamgr\pobr\imagerecognition\imagerecognition\processing\segmentation.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>e:\projekty\studiamgr\pobr\imagerecognition\imagerecognition\helpers\mathelpers.cs</string>
+      <string>e:\projekty\studiamgr\pobr\imagerecognition\imagerecognition\processingparams.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>E:\Projekty\StudiaMGR\POBR\ImageRecognition\ImageRecognition\Program.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>E:\Projekty\StudiaMGR\POBR\ImageRecognition\ImageRecognition\Analysis\ImageType.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>E:\Projekty\StudiaMGR\POBR\ImageRecognition\ImageRecognition\Analysis\Momentums.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>E:\Projekty\StudiaMGR\POBR\ImageRecognition\ImageRecognition\Analysis\Analyzer.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>e:\projekty\studiamgr\pobr\imagerecognition\imagerecognition\processing\filters\sharpeningfilter.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>e:\projekty\studiamgr\pobr\imagerecognition\imagerecognition\processing\filters\functionfilter.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>e:\projekty\studiamgr\pobr\imagerecognition\imagerecognition\processing\filters\contrastfilter.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>e:\projekty\studiamgr\pobr\imagerecognition\imagerecognition\helpers\mathext.cs</string>
     </ArrayOfString>
     <ArrayOfString>
       <string>e:\projekty\studiamgr\pobr\imagerecognition\imagerecognition\helpers\colorvectors.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>E:\Projekty\StudiaMGR\POBR\ImageRecognition\ImageRecognition\Helpers\MathExt.cs</string>
+      <string>e:\projekty\studiamgr\pobr\imagerecognition\imagerecognition\helpers\mathelpers.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>E:\Projekty\StudiaMGR\POBR\ImageRecognition\ImageRecognition\ProcessingParams.cs</string>
+      <string>e:\projekty\studiamgr\pobr\imagerecognition\imagerecognition\processing\filters\matricefilter.cs</string>
     </ArrayOfString>
     <ArrayOfString>
-      <string>E:\Projekty\StudiaMGR\POBR\ImageRecognition\ImageRecognition\Processing\Filters\ContrastFilter.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>E:\Projekty\StudiaMGR\POBR\ImageRecognition\ImageRecognition\Processing\Filters\FunctionFilter.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>E:\Projekty\StudiaMGR\POBR\ImageRecognition\ImageRecognition\Processing\Filters\SharpeningFilter.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>E:\Projekty\StudiaMGR\POBR\ImageRecognition\ImageRecognition\Processing\Segmentation.cs</string>
-    </ArrayOfString>
-    <ArrayOfString>
-      <string>E:\Projekty\StudiaMGR\POBR\ImageRecognition\ImageRecognition\Processing\Segment.cs</string>
+      <string>e:\projekty\studiamgr\pobr\imagerecognition\imagerecognition\processing\filters\medianfilter.cs</string>
     </ArrayOfString>
   </ArrayOfArrayOfString>
 </ArrayOfArrayOfArrayOfString>

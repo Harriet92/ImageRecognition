@@ -14,7 +14,7 @@ namespace ImageRecognition.Processing.Filters
         protected abstract Vec3b Filter(List<Vec3b> vectors);
         public virtual Mat ApplyFilter(Mat I)
         {
-            Mat result = new Mat(I.Rows, I.Cols, MatType.CV_8UC3);
+            Mat result = new Mat(I.Rows, I.Cols, MatType.CV_8UC3, new Scalar(0,0,0));
             var rIndexer = MatExt.GetMatIndexer(result);
             var iIndexer = MatExt.GetMatIndexer(I);
             for (int i = Size/2; i < I.Rows - Size/2; ++i)

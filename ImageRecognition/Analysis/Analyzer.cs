@@ -19,8 +19,8 @@ namespace ImageRecognition.Analysis
         {
             foreach (var seg in Segments)
             {
-                //Console.WriteLine("Shape recognized! X: {0}, Y: {1}, M1: {2}, M7: {3}", seg.LeftUpperX, seg.LeftUpperY, Momentums.M1(seg.Slice), Momentums.M7(seg.Slice));
-                seg.RecognizedShape = MatchShape(Momentums.M1(seg.Slice), Momentums.M7(seg.Slice));
+                Console.WriteLine("Shape recognized! X: {0}, Y: {1}, M1: {2}, M7: {3}, M3: {4}", seg.LeftUpperX, seg.LeftUpperY, Momentums.M1(seg.Slice), Momentums.M7(seg.Slice), Momentums.M3(seg.Slice));
+                seg.RecognizedShape = MatchShape(Momentums.M1(seg.Slice), Momentums.M7(seg.Slice), Momentums.M3(seg.Slice));
                 if (seg.RecognizedShape != Shapes.None)
                     Console.WriteLine("Shape recognized! X: {0}, Y: {1}, shape: {2}", seg.LeftUpperX, seg.LeftUpperY, seg.RecognizedShape);
             }
@@ -28,7 +28,7 @@ namespace ImageRecognition.Analysis
 
         public Mat PrintMatchedSegments(int[,] map)
         {
-            Mat result = new Mat(map.GetLength(0), map.GetLength(1), MatType.CV_8UC3);
+            Mat result = new Mat(map.GetLength(0), map.GetLength(1), MatType.CV_8UC3, new Scalar(0,0,0));
             var rindexer = MatExt.GetMatIndexer(result);
             foreach (var segment in Segments)
             {
@@ -49,13 +49,15 @@ namespace ImageRecognition.Analysis
             return result;
         }
 
-        private Shapes MatchShape(double m1, double m7)
+        private Shapes MatchShape(double m1, double m7, double m3)
         {
             if (m1.IsInRange(ProcessingParams.W_M1_min, ProcessingParams.W_M1_max)
-                && m7.IsInRange(ProcessingParams.W_M7_min, ProcessingParams.W_M7_max))
+                && m7.IsInRange(ProcessingParams.W_M7_min, ProcessingParams.W_M7_max)
+                && m3.IsInRange(ProcessingParams.W_M3_min, ProcessingParams.W_M3_max))
                 return Shapes.W;
             if (m1.IsInRange(ProcessingParams.N_M1_min, ProcessingParams.N_M1_max)
-                && m7.IsInRange(ProcessingParams.N_M7_min, ProcessingParams.N_M7_max))
+                && m7.IsInRange(ProcessingParams.N_M7_min, ProcessingParams.N_M7_max)
+                & m3.IsInRange(ProcessingParams.N_M3_min, ProcessingParams.N_M3_max))
                 return Shapes.N;
             return Shapes.None;
         }
