@@ -19,8 +19,9 @@ namespace ImageRecognition.Analysis
         {
             foreach (var seg in Segments)
             {
-                Console.WriteLine("Shape recognized! X: {0}, Y: {1}, M1: {2}, M7: {3}, M3: {4}", seg.LeftUpperX, seg.LeftUpperY, Momentums.M1(seg.Slice), Momentums.M7(seg.Slice), Momentums.M3(seg.Slice));
-                seg.RecognizedShape = MatchShape(Momentums.M1(seg.Slice), Momentums.M7(seg.Slice), Momentums.M3(seg.Slice));
+                Momentums moms = new Momentums(seg.Slice);
+                //Console.WriteLine("Shape recognized! X: {0}, Y: {1}, M1: {2}, M7: {3}, M3: {4}", seg.LeftUpperX, seg.LeftUpperY, moms.M1(), moms.M7(), moms.M3());
+                seg.RecognizedShape = MatchShape(moms.M1(), moms.M7(), moms.M3());
                 if (seg.RecognizedShape != Shapes.None)
                     Console.WriteLine("Shape recognized! X: {0}, Y: {1}, shape: {2}", seg.LeftUpperX, seg.LeftUpperY, seg.RecognizedShape);
             }

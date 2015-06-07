@@ -97,7 +97,7 @@ namespace ImageRecognition
 
         static void Main()
         {
-            Mat src = new Mat("images/dwa.jpg");
+            Mat src = new Mat("images/hard.jpg");
             MedianFilter fltr = new MedianFilter { Size = ProcessingParams.MedianFilterSize };
             ContrastFilter contrast = new ContrastFilter(ProcessingParams.ContrastFilter);
             DilationFilter dilate = new DilationFilter(3);
