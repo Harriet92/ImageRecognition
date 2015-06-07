@@ -28,15 +28,55 @@ namespace ImageRecognition.Helpers
             return new Vec3b((byte)(value.Item0 * multiplier).Trunc(), (byte)(value.Item1 * multiplier).Trunc(), (byte)(value.Item2 * multiplier).Trunc());
         }
 
-        public static Vec3b Add(this Vec3b value, Vec3b value2)
+        public static Vec3b DivideBy(this Vec3b value, int multiplier)
         {
-            return new Vec3b((byte)(value.Item0 + value2.Item0).Trunc(), (byte)(value.Item1 + value2.Item1).Trunc(), (byte)(value.Item2 + value2.Item2).Trunc());
+            return new Vec3b((byte)(value.Item0 / multiplier).Trunc(), (byte)(value.Item1 / multiplier).Trunc(), (byte)(value.Item2 / multiplier).Trunc());
+        }
+        public static Vec3i DivideBy(this Vec3i value, int multiplier)
+        {
+            return new Vec3i(value.Item0 / multiplier, value.Item1 / multiplier, value.Item2 / multiplier);
+        }
+
+        public static Vec3i Add(this Vec3i value, Vec3i value2)
+        {
+            return new Vec3i(value.Item0 + value2.Item0, value.Item1 + value2.Item1, value.Item2 + value2.Item2);
+        }
+        public static Vec3i Add(this Vec3b value, Vec3i value2)
+        {
+            return new Vec3i(value.Item0 + value2.Item0, value.Item1 + value2.Item1, value.Item2 + value2.Item2);
         }
         public static Vec3i Subtract(this Vec3i value, Vec3i value2)
         {
             return new Vec3i(value.Item0 - value2.Item0, value.Item1 - value2.Item1, value.Item2 - value2.Item2);
         }
-
+        public static Vec3i Subtract(this Vec3b value, Vec3i value2)
+        {
+            return new Vec3i(value.Item0 - value2.Item0, value.Item1 - value2.Item1, value.Item2 - value2.Item2);
+        }
+        public static Vec3i Multiply(this Vec3i value, Vec3i value2)
+        {
+            return new Vec3i(value.Item0 * value2.Item0, value.Item1 * value2.Item1, value.Item2 * value2.Item2);
+        }
+        public static Vec3i Multiply(this Vec3i value, Vec3b value2)
+        {
+            return new Vec3i(value.Item0 * value2.Item0, value.Item1 * value2.Item1, value.Item2 * value2.Item2);
+        }
+        public static Vec3i Divide(this Vec3i value, Vec3b value2)
+        {
+            return new Vec3i(value.Item0 / value2.Item0, value.Item1 / value2.Item1, value.Item2 / value2.Item2);
+        }
+        public static Vec3i Add(this Vec3i value, Vec3b value2)
+        {
+            return new Vec3i(value.Item0 + value2.Item0, value.Item1 + value2.Item1, value.Item2 + value2.Item2);
+        }
+        public static Vec3i Subtract(this Vec3i value, Vec3b value2)
+        {
+            return new Vec3i(value.Item0 - value2.Item0, value.Item1 - value2.Item1, value.Item2 - value2.Item2);
+        }
+        public static bool IsEqual(this Vec3b value, Vec3b value2)
+        {
+            return value.Item0 == value2.Item0 && value.Item1 == value2.Item1 && value.Item2 == value2.Item2;
+        }
         public static bool IsInRange(this Vec3b value, Vec3b min, Vec3b max)
         {
             return value.Item0 >= min.Item0 && value.Item1 >= min.Item1 && value.Item2 >= min.Item2 &&

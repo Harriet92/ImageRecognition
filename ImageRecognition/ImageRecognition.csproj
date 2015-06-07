@@ -233,22 +233,37 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\Analyzer.cs" />
+    <Compile Include="Analysis\Features.cs" />
     <Compile Include="Analysis\ImageType.cs" />
     <Compile Include="Analysis\Momentums.cs" />
     <Compile Include="Helpers\ColorVectors.cs" />
     <Compile Include="Helpers\MatHelpers.cs" />
     <Compile Include="Helpers\MathExt.cs" />
-    <Compile Include="ProcessingParams.cs" />
-    <Compile Include="Processing\Filters\ContrastFilter.cs" />
-    <Compile Include="Processing\Filters\FunctionFilter.cs" />
-    <Compile Include="Processing\Filters\MatriceFilter.cs" />
-    <Compile Include="Processing\Filters\DilationFilter.cs" />
-    <Compile Include="Processing\Filters\MedianFilter.cs" />
-    <Compile Include="Processing\Filters\SharpeningFilter.cs" />
+    <Compile Include="ProcArgs.cs" />
+    <Compile Include="Processing\Filters\ArrayFilters\ClosingArrFilter.cs" />
+    <Compile Include="Processing\Filters\ArrayFilters\MedianArrFilter.cs" />
+    <Compile Include="Processing\Filters\ArrayFilters\DilationArrFilter.cs" />
+    <Compile Include="Processing\Filters\ArrayFilters\FillHolesArrFilter.cs" />
+    <Compile Include="Processing\Filters\ArrayFilters\ErosionArrFilter .cs" />
+    <Compile Include="Processing\Filters\ArrayFilters\OpeningArrFilter.cs" />
+    <Compile Include="Processing\Filters\FunctionFilters\BWFilter.cs" />
+    <Compile Include="Processing\Filters\FunctionFilters\ContrastFilter.cs" />
+    <Compile Include="Processing\Filters\MatriceFilters\ClosingFilter.cs" />
+    <Compile Include="Processing\Filters\ArrayFilters\ArrayFilter.cs" />
+    <Compile Include="Processing\Filters\MatriceFilters\FillHoles.cs" />
+    <Compile Include="Processing\Filters\MatriceFilters\OpeningFilter.cs" />
+    <Compile Include="Processing\Filters\MatriceFilters\ErosionFilter .cs" />
+    <Compile Include="Processing\Filters\FunctionFilters\FunctionFilter.cs" />
+    <Compile Include="Processing\Filters\MatriceFilters\MatriceFilter.cs" />
+    <Compile Include="Processing\Filters\MatriceFilters\DilationFilter.cs" />
+    <Compile Include="Processing\Filters\MatriceFilters\MedianFilter.cs" />
+    <Compile Include="Processing\Filters\MatriceFilters\SharpeningGradientFilter.cs" />
+    <Compile Include="Processing\Filters\MatriceFilters\SharpeningFilter.cs" />
     <Compile Include="Processing\Segment.cs" />
     <Compile Include="Processing\Segmentation.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

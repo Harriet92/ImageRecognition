@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ImageRecognition.Analysis;
 using ImageRecognition.Helpers;
 using OpenCvSharp.CPlusPlus;
 
@@ -18,12 +19,12 @@ namespace ImageRecognition.Processing
             var indexer = MatExt.GetMatIndexer(I);
             for (var i = 0; i < I.Rows; i++)
                 for (var j = 0; j < I.Cols; j++)
-                    map[i, j] = indexer[i, j].IsInRange(ProcessingParams.MinRed, ProcessingParams.MaxRed) ||
-                                indexer[i, j].IsInRange(ProcessingParams.MinText, ProcessingParams.MaxText) ||
-                                indexer[i, j].IsInRange(ProcessingParams.MinGray, ProcessingParams.MaxGray)
+                    map[i, j] = indexer[i, j].IsInRange(ProcArgs.MinRed, ProcArgs.MaxRed) ||
+                                indexer[i, j].IsInRange(ProcArgs.MinText, ProcArgs.MaxText) ||
+                                indexer[i, j].IsInRange(ProcArgs.MinGray, ProcArgs.MaxGray)
                         ? 1 : 0;
             segMap = map;
-            DilateSegMap();
+            //DilateSegMap();
         }
 
         public Mat PrintBWMap()
@@ -41,6 +42,32 @@ namespace ImageRecognition.Processing
             List<Segment> segs = new List<Segment>();
             var tempSegMap = new int[segMap.GetLength(0), segMap.GetLength(1)];
             Buffer.BlockCopy(segMap, 0, tempSegMap, 0, segMap.Length * sizeof(int));
+            PerformSegmentation(tempSegMap, segs);
+            InitialSelection(segs);
+            segments = segs;
+        }
+        public Mat PrintSegments()
+        {
+            Mat result = new Mat(segMap.GetLength(0), segMap.GetLength(1), MatType.CV_8UC3, new Scalar(0, 0, 0));
+            var rindexer = MatExt.GetMatIndexer(result);
+            foreach (var segment in segments)
+            {
+                Vec3b color = new Vec3b((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
+                for (var i = segment.LeftUpperX; i < segment.RightBottomX; i++)
+                    for (var j = segment.LeftUpperY; j < segment.RightBottomY; j++)
+                        if (segment.Slice[i - segment.LeftUpperX, j - segment.LeftUpperY] == 1)
+                            rindexer[i, j] = color;
+            }
+            return result;
+        }
+        private static void InitialSelection(List<Segment> segs)
+        {
+            segs.RemoveAll(s => !Features.ShapeRatio(s).IsInRange(ProcArgs.W_ShapeRatio_min, ProcArgs.W_ShapeRatio_max) &&
+                                !Features.ShapeRatio(s).IsInRange(ProcArgs.N_ShapeRatio_min, ProcArgs.N_ShapeRatio_max));
+        }
+
+        private static void PerformSegmentation(int[,] tempSegMap, List<Segment> segs)
+        {
             for (int x = 2; x < tempSegMap.GetLength(0); x++)
             {
                 for (int y = 2; y < tempSegMap.GetLength(1); y++)
@@ -70,30 +97,16 @@ namespace ImageRecognition.Processing
                             }
                         }
 
-                        if (count > ProcessingParams.MinSegmentSize)
+                        if (count > ProcArgs.MinSegmentSize)
                         {
                             segs.Add(seg);
                         }
                     }
                 }
             }
-            segments = segs;
         }
 
-        public Mat PrintSegments()
-        {
-            Mat result = new Mat(segMap.GetLength(0), segMap.GetLength(1), MatType.CV_8UC3);
-            var rindexer = MatExt.GetMatIndexer(result);
-            foreach (var segment in segments)
-            {
-                Vec3b color = new Vec3b((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
-                for (var i = segment.LeftUpperX; i < segment.RightBottomX; i++)
-                    for (var j = segment.LeftUpperY; j < segment.RightBottomY; j++)
-                        if (segment.Slice[i - segment.LeftUpperX, j - segment.LeftUpperY] == 1)
-                            rindexer[i, j] = color;
-            }
-            return result;
-        }
+        
 
         private void DilateSegMap()
         {

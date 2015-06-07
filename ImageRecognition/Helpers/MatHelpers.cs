@@ -13,15 +13,17 @@ namespace ImageRecognition.Helpers
             return Rindexer;
         }
 
-        public static List<Vec3b> ToList(this Vec3b[,] arr)
+        public static List<T> ToList<T>(this T[,] arr)
         {
-            var result = new List<Vec3b>();
+            var result = new List<T>();
             arr.ForEach((el, x, y) =>
             {
                 result.Add(el);
             });
             return result;
         }
+
+
 
         public static void ForEach<T>(this T[,] array, Action<T,int, int> work )
         {
