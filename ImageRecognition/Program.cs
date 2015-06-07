@@ -9,7 +9,7 @@ namespace ImageRecognition
     {
         static void Main()
         {
-            Mat src = new Mat("images/trzy.jpg");
+            Mat src = new Mat("images/hard_rowno.jpg");
             MedianFilter fltr = new MedianFilter { Size = ProcArgs.MedianFilterSize };
             MedianArrFilter medianArrFilter = new MedianArrFilter();
             ContrastFilter contrast = new ContrastFilter(ProcArgs.ContrastFilter);
