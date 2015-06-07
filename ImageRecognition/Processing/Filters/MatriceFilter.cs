@@ -11,7 +11,7 @@ namespace ImageRecognition.Processing.Filters
             Size = size;
         }
         public int Size { get; set; }
-        protected abstract Vec3b Filter(List<Vec3b> vectors);
+        protected abstract Vec3b Filter(Vec3b[,] vectors);
         public virtual Mat ApplyFilter(Mat I)
         {
             Mat result = new Mat(I.Rows, I.Cols, MatType.CV_8UC3, new Scalar(0,0,0));
@@ -23,12 +23,13 @@ namespace ImageRecognition.Processing.Filters
             return result;
         }
 
-        protected List<Vec3b> GetValues(MatIndexer<Vec3b> mat, int sx, int sy)
+        protected Vec3b[,] GetValues(MatIndexer<Vec3b> mat, int sx, int sy)
         {
-            var vectors = new List<Vec3b>();
-            for (int x = 0; x < Size; x++)
-                for (int y = 0; y < Size; y++)
-                    vectors.Add(mat[sx + x,sy + y]);
+            var vectors = new Vec3b[Size,Size];
+            vectors.ForEach((elem, x, y) =>
+            {
+                vectors[x,y] = mat[sx + x,sy + y];
+            });
             return vectors;
         }
     }

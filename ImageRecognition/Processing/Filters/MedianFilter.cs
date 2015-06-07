@@ -10,8 +10,9 @@ namespace ImageRecognition.Processing.Filters
         public MedianFilter(int size = 3)
             : base(size) { }
 
-        protected override Vec3b Filter(List<Vec3b> vectors)
+        protected override Vec3b Filter(Vec3b[,] vectorsArr)
         {
+            var vectors = vectorsArr.ToList();
             return new Vec3b(vectors.Select(x => x.Item0).Median(),
                 vectors.Select(x => x.Item1).Median(),
                 vectors.Select(x => x.Item2).Median());

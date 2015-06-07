@@ -1,41 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ImageRecognition.Helpers;
+﻿using ImageRecognition.Helpers;
 using OpenCvSharp.CPlusPlus;
 
 namespace ImageRecognition.Processing.Filters
 {
-    public class SharpeningFilter:MatriceFilter
+    public class SharpeningFilter : MatriceFilter
     {
-        private readonly int neighbourMult;
-        private readonly int centerMult;
-        public SharpeningFilter(int _neighbourMult, int _centerMult, int size = 3)
-            : base(size)
-        {
-            neighbourMult = _neighbourMult;
-            centerMult = _centerMult;
-        }
-        public override Mat ApplyFilter(Mat I)
-        {
-            Mat result = new Mat(I.Rows, I.Cols, MatType.CV_8UC3);
-            var rIndexer = MatExt.GetMatIndexer(result);
-            var iIndexer = MatExt.GetMatIndexer(I);
-            for (int i = Size / 2; i < I.Rows - Size / 2; ++i)
-                for (int j = Size/2; j < I.Cols - Size/2; ++j)
-                {
-                    var vals = GetValues(iIndexer, i - Size/2, j - Size/2);
-                    vals.Remove(iIndexer[i, j]);
-                    rIndexer[i, j] = iIndexer[i,j].MuliplyBy(centerMult).Add(Filter(vals));
-                }
-            return result;
-        }
+        private readonly int[,] sharpenigFilter = {
+            {1, 1, 1},
+            {1, 9, 1},
+            {1, 1, 1}};
 
-        protected override Vec3b Filter(List<Vec3b> vectors)
+        public SharpeningFilter(int size = 3)
+            : base(size)
+        { }
+
+        protected override Vec3b Filter(Vec3b[,] vectorsArr)
         {
-            return new Vec3b((byte)vectors.Sum(x => x.Item0 * neighbourMult).Trunc(),
-                (byte)vectors.Sum(x => x.Item1 * neighbourMult).Trunc(),
-                (byte)vectors.Sum(x => x.Item2 * neighbourMult).Trunc());
+            var multiplied = vectorsArr.Multiply(sharpenigFilter);
+            var result = multiplied[Size/2, Size/2];
+            multiplied.ForEach((elem, x, y) =>
+            {
+                if (x != Size/2 || y != Size/2)
+                    result = result.Subtract(elem);
+            });
+            return result.ToByte();
         }
     }
 }
