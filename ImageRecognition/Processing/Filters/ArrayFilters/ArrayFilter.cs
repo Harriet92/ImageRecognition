@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using ImageRecognition.Helpers;
-using OpenCvSharp.CPlusPlus;
 
 namespace ImageRecognition.Processing.Filters
 {
@@ -29,6 +28,16 @@ namespace ImageRecognition.Processing.Filters
                 vectors[x,y] = mat[sx + x,sy + y];
             });
             return vectors;
+        }
+        public static int[,] ApplyFilters(int[,] I, params ArrayFilter[] filters)
+        {
+            var result = new int[I.GetLength(0), I.GetLength(1)];
+            Buffer.BlockCopy(I, 0, result, 0, I.Length * sizeof(int));
+            foreach (var filter in filters)
+            {
+                result = filter.ApplyFilter(result);
+            }
+            return result;
         }
     }
 }

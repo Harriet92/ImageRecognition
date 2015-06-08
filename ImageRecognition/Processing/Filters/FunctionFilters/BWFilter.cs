@@ -1,5 +1,4 @@
-﻿using ImageRecognition.Helpers;
-using OpenCvSharp.CPlusPlus;
+﻿using OpenCvSharp.CPlusPlus;
 
 namespace ImageRecognition.Processing.Filters
 {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ImageRecognition.Analysis;
 using ImageRecognition.Helpers;
 using OpenCvSharp.CPlusPlus;
@@ -12,7 +11,6 @@ namespace ImageRecognition.Processing
         public int[,] segMap;
         public List<Segment> segments;
         private Random random = new Random();
-        private const int dilationSize = 3;
         public void ConvertToBW(Mat I)
         {
             var map = new int[I.Rows, I.Cols];
@@ -24,7 +22,6 @@ namespace ImageRecognition.Processing
                                 indexer[i, j].IsInRange(ProcArgs.MinGray, ProcArgs.MaxGray)
                         ? 1 : 0;
             segMap = map;
-            //DilateSegMap();
         }
 
         public Mat PrintBWMap()
@@ -104,25 +101,6 @@ namespace ImageRecognition.Processing
                     }
                 }
             }
-        }
-
-        
-
-        private void DilateSegMap()
-        {
-            var tempSegMap = new int[segMap.GetLength(0), segMap.GetLength(1)];
-            for (int i = dilationSize / 2; i < segMap.GetLength(0) - dilationSize / 2; ++i)
-                for (int j = dilationSize / 2; j < segMap.GetLength(1) - dilationSize / 2; ++j)
-                {
-                    var sx = i - dilationSize / 2;
-                    var sy = j - dilationSize / 2;
-                    var vectors = new List<int>();
-                    for (int x = 0; x < dilationSize; x++)
-                        for (int y = 0; y < dilationSize; y++)
-                            vectors.Add(segMap[sx + x, sy + y]);
-                    tempSegMap[i, j] = vectors.Max(x => x);
-                }
-            segMap = tempSegMap;
         }
     }
 }

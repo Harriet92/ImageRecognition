@@ -1,7 +1,4 @@
-﻿using ImageRecognition.Analysis;
-using ImageRecognition.Processing;
-using ImageRecognition.Processing.Filters;
-using OpenCvSharp.CPlusPlus;
+﻿using OpenCvSharp.CPlusPlus;
 
 namespace ImageRecognition
 {
@@ -9,62 +6,9 @@ namespace ImageRecognition
     {
         static void Main()
         {
-            Mat src = new Mat("images/wiele_rowno.jpg");
-            MedianFilter fltr = new MedianFilter { Size = ProcArgs.MedianFilterSize };
-            MedianArrFilter medianArrFilter = new MedianArrFilter();
-            ContrastFilter contrast = new ContrastFilter(ProcArgs.ContrastFilter);
-            SharpeningFilter sharp = new SharpeningFilter();
-            ClosingArrFilter closingFilter = new ClosingArrFilter();
-            ErosionFilter erosionFilter = new ErosionFilter();
-            FillHoles holes = new FillHoles();
-            OpeningArrFilter openingFilter = new OpeningArrFilter();
-            SharpeningGradientFilter sharpGrad = new SharpeningGradientFilter(true);
-            SharpeningGradientFilter sharpLap = new SharpeningGradientFilter(false);
-            DilationFilter dilate = new DilationFilter(3);
-            BWFilter bwfilter = new BWFilter();
-            RedFilter redFilter = new RedFilter();
-            //Segmentation seg = new Segmentation();
-            Segmentation seg2 = new Segmentation();
-            //Mat res1 = //erosionFilter.ApplyFilter(
-
-            //    //closingFilter.ApplyFilter(
-            //    //openingFilter.ApplyFilter(
-            //    //sharpGrad.ApplyFilter(
-            //    redFilter.ApplyFilter(
-            //    contrast.ApplyFilter(
-            //    //sharp.ApplyFilter(
-            //    fltr.ApplyFilter(
-            //    src)));
-            Mat res2 = //erosionFilter.ApplyFilter(
-                //closingFilter.ApplyFilter(
-                //closingFilter.ApplyFilter(
-                //holes.ApplyFilter(
-               sharp.ApplyFilter(
-                contrast.ApplyFilter(
-                sharpLap.ApplyFilter(
-                //
-                fltr.ApplyFilter(
-                bwfilter.ApplyFilter(
-                src)))));
-           // Mat res2 = sharpGrad.ApplyFilter(sharp.ApplyFilter(fltr.ApplyFilter(src)));
-            //seg.ConvertToBW(res1);
-            seg2.ConvertToBW(res2);
-            //seg.segMap = closingFilter.ApplyFilter(seg.segMap);
-            //seg.segMap = openingFilter.ApplyFilter(seg.segMap);
-            seg2.segMap = closingFilter.ApplyFilter(seg2.segMap);
-            seg2.segMap = openingFilter.ApplyFilter(seg2.segMap);
-            seg2.segMap = medianArrFilter.ApplyFilter(seg2.segMap); 
-            //seg2.segMap = holes.ApplyFilter(seg2.segMap);
-            seg2.GetSegments();
-            Analyzer analyzer = new Analyzer(seg2.segments);
-            analyzer.AnalyzeSegments();
-            //using (new Window("res1", res2))
-            //using (new Window("res2", seg2.PrintBWMap()))
-            using (new Window("bw res1", src))
-            using (new Window("bw res2", analyzer.PrintResults(src)))
-            {
-                Cv2.WaitKey();
-            }
+            Mat src = new Mat("images/plytka.jpg");
+            Recognizer worker = new Recognizer(src);
+            worker.PrintAllImages();
         }
     }
 }

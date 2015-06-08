@@ -247,6 +247,8 @@
     <Compile Include="Processing\Filters\ArrayFilters\FillHolesArrFilter.cs" />
     <Compile Include="Processing\Filters\ArrayFilters\ErosionArrFilter .cs" />
     <Compile Include="Processing\Filters\ArrayFilters\OpeningArrFilter.cs" />
+    <Compile Include="Processing\Filters\Filter.cs" />
+    <Compile Include="Processing\Filters\FiltersContainer.cs" />
     <Compile Include="Processing\Filters\FunctionFilters\RedFilter.cs" />
     <Compile Include="Processing\Filters\FunctionFilters\BWFilter.cs" />
     <Compile Include="Processing\Filters\FunctionFilters\ContrastFilter.cs" />
@@ -265,6 +267,7 @@
     <Compile Include="Processing\Segment.cs" />
     <Compile Include="Processing\Segmentation.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Recognizer.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

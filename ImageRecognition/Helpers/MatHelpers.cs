@@ -23,8 +23,6 @@ namespace ImageRecognition.Helpers
             return result;
         }
 
-
-
         public static void ForEach<T>(this T[,] array, Action<T,int, int> work )
         {
             for (int x = 0; x < array.GetLength(0); x++) 

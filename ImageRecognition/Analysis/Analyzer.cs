@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Printing;
 using System.Linq;
 using System.Threading.Tasks;
 using ImageRecognition.Helpers;
@@ -28,8 +27,8 @@ namespace ImageRecognition.Analysis
         {
             var space = 5;
             if (LogoSegments.Count == 0)
-                return source;
-            Mat result = new Mat(LogoSegments.Sum(x => x.ImageArea.Cols) + (LogoSegments.Count -1) * space, LogoSegments.Max(x => x.ImageArea.Rows), MatType.CV_8UC3, new Scalar(255));
+                return new Mat("images/noresults.jpg");
+            Mat result = new Mat(LogoSegments.Sum(x => x.ImageArea.Cols) + (LogoSegments.Count -1) * space, LogoSegments.Max(x => x.ImageArea.Rows), MatType.CV_8UC3, new Scalar(255, 255, 255));
             int row = 0;
             var rIndexer = MatExt.GetMatIndexer(result);
             var iIndexer = MatExt.GetMatIndexer(source);
@@ -131,6 +130,5 @@ namespace ImageRecognition.Analysis
                 & m3.IsInRange(ProcArgs.N_M3_min, ProcArgs.N_M3_max)
                    && shapeRatio.IsInRange(ProcArgs.N_ShapeRatio_min, ProcArgs.N_ShapeRatio_max);
         }
-
     }
 }

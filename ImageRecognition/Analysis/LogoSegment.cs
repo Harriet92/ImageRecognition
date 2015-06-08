@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ImageRecognition.Processing;
 
 namespace ImageRecognition.Analysis
@@ -24,7 +23,5 @@ namespace ImageRecognition.Analysis
                     N.ImageArea.RightBottomX, Math.Max(W.ImageArea.RightBottomY, N.ImageArea.RightBottomY));
             }
         }
-
-
     }
 }

@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using ImageRecognition.Helpers;
+﻿using ImageRecognition.Helpers;
 using OpenCvSharp.CPlusPlus;
 
 namespace ImageRecognition.Processing.Filters
 {
-    public abstract class MatriceFilter
+    public abstract class MatriceFilter:Filter
     {
         protected MatriceFilter(int size)
         {
@@ -12,7 +11,7 @@ namespace ImageRecognition.Processing.Filters
         }
         public int Size { get; set; }
         protected abstract Vec3b Filter(Vec3b[,] vectors);
-        public virtual Mat ApplyFilter(Mat I)
+        public override Mat ApplyFilter(Mat I)
         {
             Mat result = new Mat(I.Rows, I.Cols, MatType.CV_8UC3, new Scalar(0,0,0));
             var rIndexer = MatExt.GetMatIndexer(result);
