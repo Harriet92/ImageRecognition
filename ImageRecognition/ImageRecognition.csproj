@@ -235,6 +235,7 @@
     <Compile Include="Analysis\Analyzer.cs" />
     <Compile Include="Analysis\Features.cs" />
     <Compile Include="Analysis\ImageType.cs" />
+    <Compile Include="Analysis\LogoSegment.cs" />
     <Compile Include="Analysis\Momentums.cs" />
     <Compile Include="Helpers\ColorVectors.cs" />
     <Compile Include="Helpers\MatHelpers.cs" />
@@ -246,6 +247,7 @@
     <Compile Include="Processing\Filters\ArrayFilters\FillHolesArrFilter.cs" />
     <Compile Include="Processing\Filters\ArrayFilters\ErosionArrFilter .cs" />
     <Compile Include="Processing\Filters\ArrayFilters\OpeningArrFilter.cs" />
+    <Compile Include="Processing\Filters\FunctionFilters\RedFilter.cs" />
     <Compile Include="Processing\Filters\FunctionFilters\BWFilter.cs" />
     <Compile Include="Processing\Filters\FunctionFilters\ContrastFilter.cs" />
     <Compile Include="Processing\Filters\MatriceFilters\ClosingFilter.cs" />
@@ -259,6 +261,7 @@
     <Compile Include="Processing\Filters\MatriceFilters\MedianFilter.cs" />
     <Compile Include="Processing\Filters\MatriceFilters\SharpeningGradientFilter.cs" />
     <Compile Include="Processing\Filters\MatriceFilters\SharpeningFilter.cs" />
+    <Compile Include="Processing\ImageArea.cs" />
     <Compile Include="Processing\Segment.cs" />
     <Compile Include="Processing\Segmentation.cs" />
     <Compile Include="Program.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing.Printing;
+using System.Linq;
 using System.Threading.Tasks;
 using ImageRecognition.Helpers;
 using ImageRecognition.Processing;
@@ -11,6 +12,7 @@ namespace ImageRecognition.Analysis
     public class Analyzer
     {
         public List<Segment> Segments { get; set; }
+        public List<LogoSegment> LogoSegments { get; private set; }
         public Analyzer(List<Segment> segs)
         {
             Segments = segs;
@@ -18,16 +20,69 @@ namespace ImageRecognition.Analysis
 
         public void AnalyzeSegments()
         {
+            FindWN();
+            AssembleLogos();
+        }
+
+        public Mat PrintResults(Mat source)
+        {
+            var space = 5;
+            if (LogoSegments.Count == 0)
+                return source;
+            Mat result = new Mat(LogoSegments.Sum(x => x.ImageArea.Cols) + (LogoSegments.Count -1) * space, LogoSegments.Max(x => x.ImageArea.Rows), MatType.CV_8UC3, new Scalar(255));
+            int row = 0;
+            var rIndexer = MatExt.GetMatIndexer(result);
+            var iIndexer = MatExt.GetMatIndexer(source);
+            foreach (var logoSegment in LogoSegments)
+            {
+                for (int i = 0; i < logoSegment.ImageArea.Rows; ++i)
+                    for (int j = 0; j < logoSegment.ImageArea.Cols; ++j)
+                        rIndexer[row + j, i] = iIndexer[logoSegment.ImageArea.LeftUpperX + j,logoSegment.ImageArea.LeftUpperY + i];
+                row += logoSegment.ImageArea.Cols - 1 + space;
+            }
+            return result;
+        }
+
+        private void AssembleLogos()
+        {
+            var ws = Segments.FindAll(x => x.RecognizedShape == Shapes.W);
+            var ns = Segments.FindAll(x => x.RecognizedShape == Shapes.N);
+            var logos = new List<LogoSegment>();
+            ws.ForEach(x => logos.Add(new LogoSegment(x)));
+            foreach (var logo in logos)
+            {
+                Segment matching = ns.FirstOrDefault(segment => WNCompatible(logo.W, segment));
+                if (matching == null)
+                    continue;
+                logo.N = matching;
+                ns.Remove(matching);
+            }
+            logos.RemoveAll(x => x.W == null || x.N == null);
+            LogoSegments = logos;
+        }
+
+        private bool WNCompatible(Segment w, Segment n)
+        {
+            if (w.ImageArea.LeftUpperY > n.ImageArea.LeftUpperY)
+                return false;
+
+            Console.WriteLine("Logo Shape Ratio: " + ((n.ImageArea.RightBottomX - w.ImageArea.LeftUpperX)/(double)(n.ImageArea.RightBottomY - w.ImageArea.LeftUpperY)));
+            return true;
+        }
+
+        private void FindWN()
+        {
             Parallel.ForEach(Segments,
                 (seg) =>
                 {
                     Momentums moms = new Momentums(seg.Slice);
-                    Console.WriteLine("Shape recognized! X: {0}, Y: {1}, M1: {2}, M7: {3}, M3: {4}, Shape: {5}", seg.LeftUpperX, seg.LeftUpperY, moms.M1(), moms.M7(), moms.M3(), Features.ShapeRatio(seg));
+                    Console.WriteLine("Shape recognized! X: {0}, Y: {1}, M1: {2}, M7: {3}, M3: {4}, Shape: {5}", seg.ImageArea.LeftUpperX, seg.ImageArea.LeftUpperY, moms.M1(), moms.M7(), moms.M3(), Features.ShapeRatio(seg));
                     seg.RecognizedShape = MatchShape(moms.M1(), moms.M7(), moms.M3(), Features.ShapeRatio(seg));
                     if (seg.RecognizedShape != Shapes.None)
-                        Console.WriteLine("Shape recognized! X: {0}, Y: {1}, shape: {2}", seg.LeftUpperX, seg.LeftUpperY,
+                        Console.WriteLine("Shape recognized! X: {0}, Y: {1}, shape: {2}", seg.ImageArea.LeftUpperX, seg.ImageArea.LeftUpperY,
                             seg.RecognizedShape);
                 });
+            Segments.RemoveAll(x => x.RecognizedShape == Shapes.None);
         }
 
         public Mat PrintMatchedSegments(int[,] map)
@@ -41,12 +96,12 @@ namespace ImageRecognition.Analysis
                     color = ColorVectors.Red;
                 else if (segment.RecognizedShape == Shapes.W)
                     color = ColorVectors.Blue;
-                for (int i = 0; i < segment.Rows; i++)
+                for (int i = 0; i < segment.ImageArea.Rows; i++)
                 {
-                    for (int j = 0; j < segment.Cols; j++)
+                    for (int j = 0; j < segment.ImageArea.Cols; j++)
                     {
-                        if (map[j + segment.LeftUpperX, i + segment.LeftUpperY] == 1)
-                            rindexer[j + segment.LeftUpperX, i + segment.LeftUpperY] = color;
+                        if (map[j + segment.ImageArea.LeftUpperX, i + segment.ImageArea.LeftUpperY] == 1)
+                            rindexer[j + segment.ImageArea.LeftUpperX, i + segment.ImageArea.LeftUpperY] = color;
                     }
                 }
             }

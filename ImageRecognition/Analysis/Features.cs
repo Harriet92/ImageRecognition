@@ -6,7 +6,7 @@ namespace ImageRecognition.Analysis
     {
         public static double ShapeRatio(Segment seg)
         {
-            return seg.Cols/(double) seg.Rows;
+            return seg.ImageArea.Cols/(double) seg.ImageArea.Rows;
         }
     }
 }

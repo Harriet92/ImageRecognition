@@ -53,9 +53,9 @@ namespace ImageRecognition.Processing
             foreach (var segment in segments)
             {
                 Vec3b color = new Vec3b((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
-                for (var i = segment.LeftUpperX; i < segment.RightBottomX; i++)
-                    for (var j = segment.LeftUpperY; j < segment.RightBottomY; j++)
-                        if (segment.Slice[i - segment.LeftUpperX, j - segment.LeftUpperY] == 1)
+                for (var i = segment.ImageArea.LeftUpperX; i < segment.ImageArea.RightBottomX; i++)
+                    for (var j = segment.ImageArea.LeftUpperY; j < segment.ImageArea.RightBottomY; j++)
+                        if (segment.Slice[i - segment.ImageArea.LeftUpperX, j - segment.ImageArea.LeftUpperY] == 1)
                             rindexer[i, j] = color;
             }
             return result;

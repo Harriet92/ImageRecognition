@@ -9,7 +9,7 @@ namespace ImageRecognition
     {
         static void Main()
         {
-            Mat src = new Mat("images/hard_rowno.jpg");
+            Mat src = new Mat("images/wiele_rowno.jpg");
             MedianFilter fltr = new MedianFilter { Size = ProcArgs.MedianFilterSize };
             MedianArrFilter medianArrFilter = new MedianArrFilter();
             ContrastFilter contrast = new ContrastFilter(ProcArgs.ContrastFilter);
@@ -22,18 +22,19 @@ namespace ImageRecognition
             SharpeningGradientFilter sharpLap = new SharpeningGradientFilter(false);
             DilationFilter dilate = new DilationFilter(3);
             BWFilter bwfilter = new BWFilter();
+            RedFilter redFilter = new RedFilter();
             //Segmentation seg = new Segmentation();
             Segmentation seg2 = new Segmentation();
             //Mat res1 = //erosionFilter.ApplyFilter(
 
             //    //closingFilter.ApplyFilter(
             //    //openingFilter.ApplyFilter(
-            //    sharpGrad.ApplyFilter(
+            //    //sharpGrad.ApplyFilter(
+            //    redFilter.ApplyFilter(
             //    contrast.ApplyFilter(
-            //    sharp.ApplyFilter(
+            //    //sharp.ApplyFilter(
             //    fltr.ApplyFilter(
-            //    bwfilter.ApplyFilter(
-            //    src)))));
+            //    src)));
             Mat res2 = //erosionFilter.ApplyFilter(
                 //closingFilter.ApplyFilter(
                 //closingFilter.ApplyFilter(
@@ -57,10 +58,10 @@ namespace ImageRecognition
             seg2.GetSegments();
             Analyzer analyzer = new Analyzer(seg2.segments);
             analyzer.AnalyzeSegments();
-            using (new Window("res1", res2))
-            using (new Window("res2", seg2.PrintBWMap()))
-            using (new Window("bw res1", seg2.PrintSegments()))
-            using (new Window("bw res2", analyzer.PrintMatchedSegments(seg2.segMap)))
+            //using (new Window("res1", res2))
+            //using (new Window("res2", seg2.PrintBWMap()))
+            using (new Window("bw res1", src))
+            using (new Window("bw res2", analyzer.PrintResults(src)))
             {
                 Cv2.WaitKey();
             }

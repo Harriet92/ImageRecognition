@@ -6,21 +6,18 @@ namespace ImageRecognition.Processing
 {
     public class Segment
     {
+        private readonly ImageArea _imageArea;
         public Shapes RecognizedShape { get; set; }
-        public int LeftUpperX { get; set; }
-        public int LeftUpperY { get; set; }
-        public int RightBottomX { get; set; }
-        public int RightBottomY { get; set; }
-        public int Rows { get { return RightBottomY - LeftUpperY + 1; } }
-        public int Cols { get { return RightBottomX - LeftUpperX + 1; } }
         public int[,] Slice { get; private set; }
+
+        public ImageArea ImageArea
+        {
+            get { return _imageArea; }
+        }
 
         public Segment(int leftUpperX, int rightBottomX, int leftUpperY, int rightBottomY)
         {
-            LeftUpperX = leftUpperX;
-            LeftUpperY = leftUpperY;
-            RightBottomX = rightBottomX;
-            RightBottomY = rightBottomY;
+            _imageArea = new ImageArea(leftUpperX, leftUpperY, rightBottomX, rightBottomY);
             RecognizedShape = Shapes.None;
             Slice = new int[1, 1];
             Slice[0, 0] = 1;
@@ -32,15 +29,15 @@ namespace ImageRecognition.Processing
             int oldMinY;
             if (ChangeSliceSize(out oldMinX, x, y, out oldMinY))
                 ExpandSliceArea(oldMinX, oldMinY);
-            Slice[x - LeftUpperX, y - LeftUpperY] = 1;
+            Slice[x - ImageArea.LeftUpperX, y - ImageArea.LeftUpperY] = 1;
         }
 
         private void ExpandSliceArea(int oldMinX, int oldMinY)
         {
-            int si = (oldMinX - LeftUpperX).Trunc();
-            int sj = (oldMinY - LeftUpperY).Trunc();
+            int si = (oldMinX - ImageArea.LeftUpperX).Trunc();
+            int sj = (oldMinY - ImageArea.LeftUpperY).Trunc();
             var temp = Slice;
-            Slice = new int[Cols, Rows];
+            Slice = new int[ImageArea.Cols, ImageArea.Rows];
             for (int i = 0; i < temp.GetLength(0); i++)
             {
                 for (int j = 0; j < temp.GetLength(1); j++)
@@ -55,26 +52,26 @@ namespace ImageRecognition.Processing
             oldMinX = 0;
             oldMinY = 0;
             bool sizeChanged = false;
-            if (x < LeftUpperX)
+            if (x < ImageArea.LeftUpperX)
             {
-                oldMinX = LeftUpperX;
-                LeftUpperX = Math.Min(LeftUpperX, x);
+                oldMinX = ImageArea.LeftUpperX;
+                ImageArea.LeftUpperX = Math.Min(ImageArea.LeftUpperX, x);
                 sizeChanged = true;
             }
-            else if (x > RightBottomX)
+            else if (x > ImageArea.RightBottomX)
             {
-                RightBottomX = Math.Max(RightBottomX, x);
+                ImageArea.RightBottomX = Math.Max(ImageArea.RightBottomX, x);
                 sizeChanged = true;
             }
-            if (y < LeftUpperY)
+            if (y < ImageArea.LeftUpperY)
             {
-                oldMinY = LeftUpperY;
-                LeftUpperY = Math.Min(LeftUpperY, y);
+                oldMinY = ImageArea.LeftUpperY;
+                ImageArea.LeftUpperY = Math.Min(ImageArea.LeftUpperY, y);
                 sizeChanged = true;
             }
-            else if (y > RightBottomY)
+            else if (y > ImageArea.RightBottomY)
             {
-                RightBottomY = Math.Max(RightBottomY, y);
+                ImageArea.RightBottomY = Math.Max(ImageArea.RightBottomY, y);
                 sizeChanged = true;
             }
             return sizeChanged;
