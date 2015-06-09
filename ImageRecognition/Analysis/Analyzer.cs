@@ -55,7 +55,7 @@ namespace ImageRecognition.Analysis
                 var redSlice = FiltersContainer.RedFilter.ApplyFilter(logoSegment.SliceImage);
                 if (!GetRedPixelsRatio(redSlice).IsInRange(ProcArgs.Cut_min, ProcArgs.Cut_max))
                 {
-                    Console.WriteLine("Removing: " + GetRedPixelsRatio(redSlice));
+                    Console.WriteLine("Removing because of cut lack: " + GetRedPixelsRatio(redSlice));
                     toBeRemoved.Add(logoSegment);
                 }
             }
@@ -118,7 +118,7 @@ namespace ImageRecognition.Analysis
                 return false;
 
             var shapeRatio = ((n.ImageArea.RightBottomX - w.ImageArea.LeftUpperX) / (double)(n.ImageArea.RightBottomY - w.ImageArea.LeftUpperY));
-            Console.WriteLine("Shape ratio: " + shapeRatio);
+            //Console.WriteLine("Shape ratio: " + shapeRatio);
             return shapeRatio.IsInRange(ProcArgs.Logo_ShapeRatio_min, ProcArgs.Logo_ShapeRatio_max);
         }
 
@@ -128,7 +128,7 @@ namespace ImageRecognition.Analysis
                 (seg) =>
                 {
                     Momentums moms = new Momentums(seg.Slice);
-                    Console.WriteLine("Shape recognized! X: {0}, Y: {1}, M1: {2}, M7: {3}, M3: {4}, Shape: {5}", seg.ImageArea.LeftUpperX, seg.ImageArea.LeftUpperY, moms.M1(), moms.M7(), moms.M3(), Features.ShapeRatio(seg));
+                    //Console.WriteLine("Shape recognized! X: {0}, Y: {1}, M1: {2}, M7: {3}, M3: {4}, Shape: {5}", seg.ImageArea.LeftUpperX, seg.ImageArea.LeftUpperY, moms.M1(), moms.M7(), moms.M3(), Features.ShapeRatio(seg));
                     seg.RecognizedShape = MatchShape(moms.M1(), moms.M7(), moms.M3(), Features.ShapeRatio(seg));
                 });
             Segments.RemoveAll(x => x.RecognizedShape == Shapes.None);

@@ -78,9 +78,9 @@ namespace ImageRecognition
                 ProcessImage();
             using (new Window("Source image", SourceImage))
             using (new Window("Enhanced image", EnhancedImage))
+            using (new Window("Binary image", BinaryImage))
             using (new Window("Segments", SegmentsImage))
             using (new Window("Matched letters", MatchedLettersImage))
-            using (new Window("Binary image", BinaryImage))
             using (new Window("Recognized elements", ResultsImage))
             {
                 Cv2.WaitKey();

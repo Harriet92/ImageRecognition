@@ -26,6 +26,10 @@ namespace ImageRecognition
             worker = new Recognizer(src);
             worker.PrintResults();
 
+            src = new Mat("images/plytka.jpg");
+            worker = new Recognizer(src);
+            worker.PrintResults();
+
             src = new Mat("images/trzy.jpg");
             worker = new Recognizer(src);
             worker.PrintResults();
