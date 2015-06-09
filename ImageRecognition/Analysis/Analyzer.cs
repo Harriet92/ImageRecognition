@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ImageRecognition.Helpers;
 using ImageRecognition.Processing;
+using ImageRecognition.Processing.Filters;
 using OpenCvSharp.CPlusPlus;
 
 namespace ImageRecognition.Analysis
@@ -12,23 +13,27 @@ namespace ImageRecognition.Analysis
     {
         public List<Segment> Segments { get; set; }
         public List<LogoSegment> LogoSegments { get; private set; }
-        public Analyzer(List<Segment> segs)
+        public List<LogoSegment> LogoSegmentsWithoutRed { get; private set; }
+        private Mat source;
+        public Analyzer(List<Segment> segs, Mat src)
         {
             Segments = segs;
+            source = src;
         }
 
         public void AnalyzeSegments()
         {
             FindWN();
             AssembleLogos();
+            AnalyzeRedCut();
         }
 
-        public Mat PrintResults(Mat source)
+        public Mat PrintResults()
         {
             var space = 5;
             if (LogoSegments.Count == 0)
                 return new Mat("images/noresults.jpg");
-            Mat result = new Mat(LogoSegments.Sum(x => x.ImageArea.Cols) + (LogoSegments.Count -1) * space, LogoSegments.Max(x => x.ImageArea.Rows), MatType.CV_8UC3, new Scalar(255, 255, 255));
+            Mat result = new Mat(LogoSegments.Sum(x => x.ImageArea.Cols) + (LogoSegments.Count - 1) * space, LogoSegments.Max(x => x.ImageArea.Rows), MatType.CV_8UC3, new Scalar(255, 255, 255));
             int row = 0;
             var rIndexer = MatExt.GetMatIndexer(result);
             var iIndexer = MatExt.GetMatIndexer(source);
@@ -36,10 +41,43 @@ namespace ImageRecognition.Analysis
             {
                 for (int i = 0; i < logoSegment.ImageArea.Rows; ++i)
                     for (int j = 0; j < logoSegment.ImageArea.Cols; ++j)
-                        rIndexer[row + j, i] = iIndexer[logoSegment.ImageArea.LeftUpperX + j,logoSegment.ImageArea.LeftUpperY + i];
+                        rIndexer[row + j, i] = iIndexer[logoSegment.ImageArea.LeftUpperX + j, logoSegment.ImageArea.LeftUpperY + i];
                 row += logoSegment.ImageArea.Cols - 1 + space;
             }
             return result;
+        }
+
+        private void AnalyzeRedCut()
+        {
+            List<LogoSegment> toBeRemoved = new List<LogoSegment>();
+            foreach (var logoSegment in LogoSegments)
+            {
+                var redSlice = FiltersContainer.RedFilter.ApplyFilter(logoSegment.SliceImage);
+                if (!GetRedPixelsRatio(redSlice).IsInRange(ProcArgs.Cut_min, ProcArgs.Cut_max))
+                {
+                    Console.WriteLine("Removing: " + GetRedPixelsRatio(redSlice));
+                    toBeRemoved.Add(logoSegment);
+                }
+            }
+            toBeRemoved.ForEach(x => LogoSegments.Remove(x));
+            LogoSegmentsWithoutRed = toBeRemoved;
+        }
+
+        private double GetRedPixelsRatio(Mat I)
+        {
+            var reds = CountRedPixels(I);
+            return reds / (double)(I.Rows * I.Cols) * 100;
+        }
+
+        private long CountRedPixels(Mat I)
+        {
+            var iIndexer = MatExt.GetMatIndexer(I);
+            long counter = 0;
+            for (int i = 0; i < I.Rows; ++i)
+                for (int j = 0; j < I.Cols; ++j)
+                    if (iIndexer[i, j].IsInRange(ProcArgs.MinRed, ProcArgs.MaxRed))
+                        counter++;
+            return counter;
         }
 
         private void AssembleLogos()
@@ -58,6 +96,20 @@ namespace ImageRecognition.Analysis
             }
             logos.RemoveAll(x => x.W == null || x.N == null);
             LogoSegments = logos;
+            CutSlices();
+        }
+
+        private void CutSlices()
+        {
+            var iIndexer = MatExt.GetMatIndexer(source);
+            foreach (var logoSegment in LogoSegments)
+            {
+                logoSegment.SliceImage = new Mat(logoSegment.ImageArea.Cols, logoSegment.ImageArea.Rows, MatType.CV_8UC3, new Scalar(255, 255, 255));
+                var sIndexer = MatExt.GetMatIndexer(logoSegment.SliceImage);
+                for (int i = 0; i < logoSegment.ImageArea.Rows; ++i)
+                    for (int j = 0; j < logoSegment.ImageArea.Cols; ++j)
+                        sIndexer[j, i] = iIndexer[logoSegment.ImageArea.LeftUpperX + j, logoSegment.ImageArea.LeftUpperY + i];
+            }
         }
 
         private bool WNCompatible(Segment w, Segment n)
@@ -65,8 +117,9 @@ namespace ImageRecognition.Analysis
             if (w.ImageArea.LeftUpperY > n.ImageArea.LeftUpperY)
                 return false;
 
-            Console.WriteLine("Logo Shape Ratio: " + ((n.ImageArea.RightBottomX - w.ImageArea.LeftUpperX)/(double)(n.ImageArea.RightBottomY - w.ImageArea.LeftUpperY)));
-            return true;
+            var shapeRatio = ((n.ImageArea.RightBottomX - w.ImageArea.LeftUpperX) / (double)(n.ImageArea.RightBottomY - w.ImageArea.LeftUpperY));
+            Console.WriteLine("Shape ratio: " + shapeRatio);
+            return shapeRatio.IsInRange(ProcArgs.Logo_ShapeRatio_min, ProcArgs.Logo_ShapeRatio_max);
         }
 
         private void FindWN()
@@ -77,9 +130,6 @@ namespace ImageRecognition.Analysis
                     Momentums moms = new Momentums(seg.Slice);
                     Console.WriteLine("Shape recognized! X: {0}, Y: {1}, M1: {2}, M7: {3}, M3: {4}, Shape: {5}", seg.ImageArea.LeftUpperX, seg.ImageArea.LeftUpperY, moms.M1(), moms.M7(), moms.M3(), Features.ShapeRatio(seg));
                     seg.RecognizedShape = MatchShape(moms.M1(), moms.M7(), moms.M3(), Features.ShapeRatio(seg));
-                    if (seg.RecognizedShape != Shapes.None)
-                        Console.WriteLine("Shape recognized! X: {0}, Y: {1}, shape: {2}", seg.ImageArea.LeftUpperX, seg.ImageArea.LeftUpperY,
-                            seg.RecognizedShape);
                 });
             Segments.RemoveAll(x => x.RecognizedShape == Shapes.None);
         }

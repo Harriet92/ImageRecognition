@@ -56,10 +56,10 @@ namespace ImageRecognition
 
         private void PerformAnalysis()
         {
-            analyzer = new Analyzer(segmentation.segments);
+            analyzer = new Analyzer(segmentation.segments, SourceImage);
             analyzer.AnalyzeSegments();
             MatchedLettersImage = analyzer.PrintMatchedSegments(segmentation.segMap);
-            ResultsImage = analyzer.PrintResults(SourceImage);
+            ResultsImage = analyzer.PrintResults();
         }
 
         public void PrintResults()
@@ -81,7 +81,7 @@ namespace ImageRecognition
             using (new Window("Segments", SegmentsImage))
             using (new Window("Matched letters", MatchedLettersImage))
             using (new Window("Binary image", BinaryImage))
-            using (new Window("Recognized elements", analyzer.PrintResults(SourceImage)))
+            using (new Window("Recognized elements", ResultsImage))
             {
                 Cv2.WaitKey();
             }

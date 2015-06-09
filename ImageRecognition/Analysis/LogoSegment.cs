@@ -1,5 +1,6 @@
 ﻿using System;
 using ImageRecognition.Processing;
+using OpenCvSharp.CPlusPlus;
 
 namespace ImageRecognition.Analysis
 {
@@ -7,7 +8,7 @@ namespace ImageRecognition.Analysis
     {
         public Segment W { get; set; }
         public Segment N { get; set; }
-
+        public Mat SliceImage { get; set; }
         public LogoSegment(Segment wseg)
         {
             W = wseg;
@@ -19,8 +20,8 @@ namespace ImageRecognition.Analysis
             {
                 if (W == null || N == null)
                     return null;
-                return new ImageArea(W.ImageArea.LeftUpperX, Math.Min(W.ImageArea.LeftUpperY, N.ImageArea.LeftUpperY),
-                    N.ImageArea.RightBottomX, Math.Max(W.ImageArea.RightBottomY, N.ImageArea.RightBottomY));
+                return new ImageArea(Math.Min(W.ImageArea.LeftUpperX, N.ImageArea.LeftUpperX), Math.Min(W.ImageArea.LeftUpperY, N.ImageArea.LeftUpperY),
+                    Math.Max(W.ImageArea.RightBottomX, N.ImageArea.RightBottomX), Math.Max(W.ImageArea.RightBottomY, N.ImageArea.RightBottomY));
             }
         }
     }
